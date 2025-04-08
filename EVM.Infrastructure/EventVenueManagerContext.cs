@@ -10,6 +10,7 @@ namespace EVM.Infrastructure
     public class EventVenueManagerContext(DbContextOptions options) : DbContext(options)
     {
         // DbSets for the entities
+
         // OnModelCreating method to configure the model
     }
 }
