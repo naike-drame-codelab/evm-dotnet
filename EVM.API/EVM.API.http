@@ -1,0 +1,6 @@
+@EVM.API_HostAddress = http://localhost:5090
+
+GET {{EVM.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
