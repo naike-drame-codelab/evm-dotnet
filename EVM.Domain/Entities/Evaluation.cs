@@ -1,6 +1,6 @@
-﻿namespace EVM.Domain.Entities
-{
-    public class Evaluation
-    {
-    }
-}
+﻿//namespace EVM.Domain.Entities
+//{
+//    public class Evaluation
+//    {
+//    }
+//}

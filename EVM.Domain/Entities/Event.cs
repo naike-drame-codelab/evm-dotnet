@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using EVM.Domain.Enums;
 
 namespace EVM.Domain.Entities
 {
@@ -6,13 +6,18 @@ namespace EVM.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
-        public string? Description { get; set; } = null!;
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public string? ImageUrl { get; set; } = null!;
+        public EventType Type { get; set; }
+        public string Description { get; set; } = null!;
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        
+        public ICollection<RoomReservation>? RoomReservations { get; set; }
+        public ICollection<MaterialOption>? MaterialOptions { get; set; }
+        public ICollection<CateringOption>? CateringOptions { get; set; }
+        public ICollection<Ticket>? Tickets { get; set; }
 
-        [ForeignKey("Client")]
         public int ClientId { get; set; }
-        public required User Client { get; set; }
-
+        public Client? Client { get; set; }
     }
 }

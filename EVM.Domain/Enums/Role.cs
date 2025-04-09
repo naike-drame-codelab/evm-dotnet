@@ -4,6 +4,7 @@
     {
         Admin,
         Client,
-        Customer
+        Customer,
+        None
     }
 }
