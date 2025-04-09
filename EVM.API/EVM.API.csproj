@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EVM.Application\EVM.Application.csproj" />
     <ProjectReference Include="..\EVM.Domain\EVM.Domain.csproj" />
     <ProjectReference Include="..\EVM.Infrastructure\EVM.Infrastructure.csproj" />

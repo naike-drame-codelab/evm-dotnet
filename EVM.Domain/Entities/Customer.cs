@@ -12,7 +12,7 @@ namespace EVM.Domain.Entities
     {
         public int Id { get; set; }
         public Role Role { get; set; } = Role.Customer;
-        public string? Username { get; set; } = null!;
+        public string? Name { get; set; } = null!;
         public string Email { get; set; } = null!;
 
         public ICollection<Ticket>? Tickets { get; set; }

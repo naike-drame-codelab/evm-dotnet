@@ -1,3 +1,4 @@
+using EVM.API.Configurations;
 using EVM.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -19,6 +20,15 @@ builder.Services.AddDbContext<EventVenueManagerContext>(
     o => o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"))
 );
 
+// TokenManager
+// AddAuthentication
+
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+
+// AddEmailService
+// AddCors
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

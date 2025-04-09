@@ -22,6 +22,7 @@ namespace EVM.Infrastructure
         public DbSet<MaterialOption> MaterialOptions { get; set; }
         public DbSet<CateringOption> CateringOptions { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<EventLog> EventLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,7 @@ namespace EVM.Infrastructure
             modelBuilder.ApplyConfiguration(new MaterialOptionConfiguration());
             modelBuilder.ApplyConfiguration(new CateringOptionConfiguration());
             modelBuilder.ApplyConfiguration(new TicketConfiguration());
+            modelBuilder.ApplyConfiguration(new EventLogConfiguration());
         }
     }
 }

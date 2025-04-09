@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using EVM.Application.Interfaces;
+using EVM.Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EVM.Application.Interfaces
+namespace EVM.Application.Interfaces.Repositories
 {
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
