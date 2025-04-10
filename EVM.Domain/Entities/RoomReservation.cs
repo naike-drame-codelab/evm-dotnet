@@ -7,7 +7,7 @@ namespace EVM.Domain.Entities
     public class RoomReservation
     {
         public Guid Id { get; set; }
-        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
+        public PaymentStatus PaymentStatus { get; set; }
        
         public Guid EventId { get; set; }
         public Event? Event { get; set; }

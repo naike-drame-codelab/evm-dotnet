@@ -299,7 +299,10 @@ namespace EVM.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", t =>
+                        {
+                            t.HasCheckConstraint("CK_Event_Dates", "StartDate < EndDate");
+                        });
 
                     b.HasData(
                         new
@@ -422,9 +425,6 @@ namespace EVM.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MaterialId");
@@ -440,16 +440,14 @@ namespace EVM.Infrastructure.Migrations
                             Id = 1,
                             EventId = new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"),
                             MaterialId = 1,
-                            Quantity = 2,
-                            TotalPrice = 0m
+                            Quantity = 2
                         },
                         new
                         {
                             Id = 2,
                             EventId = new Guid("fedcba98-7654-3210-fedc-ba9876543210"),
                             MaterialId = 3,
-                            Quantity = 1,
-                            TotalPrice = 0m
+                            Quantity = 1
                         });
                 });
 
@@ -544,7 +542,9 @@ namespace EVM.Infrastructure.Migrations
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Pending");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -563,7 +563,7 @@ namespace EVM.Infrastructure.Migrations
                         {
                             Id = new Guid("01234567-89ab-cdef-0123-456789abcdef"),
                             EventId = new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"),
-                            PaymentStatus = "Pending",
+                            PaymentStatus = "Completed",
                             RoomId = 1
                         },
                         new

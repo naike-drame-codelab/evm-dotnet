@@ -2,9 +2,8 @@
 {
     public class CateringOption
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public int NumberOfPeople { get; set; }
-        public decimal TotalPrice { get; set; }
         
         public Guid EventId { get; set; }
         public Event? Event { get; set; }

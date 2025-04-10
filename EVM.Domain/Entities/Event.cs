@@ -13,12 +13,30 @@ namespace EVM.Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         
-        public ICollection<RoomReservation>? RoomReservations { get; set; }
+        public required ICollection<RoomReservation> RoomReservations { get; set; } 
         public ICollection<MaterialOption>? MaterialOptions { get; set; }
         public ICollection<CateringOption>? CateringOptions { get; set; }
         public ICollection<Ticket>? Tickets { get; set; }
 
         public int ClientId { get; set; }
         public Client? Client { get; set; }
+
+        public decimal CalculateEstimatedCost()
+        {
+            decimal roomCost = RoomReservations?.Sum(r =>
+            {
+                if (r.Room == null) return 0;
+
+                double hours = (EndDate - StartDate).TotalHours;
+
+                return (decimal)hours * r.Room.PricePerHour;
+            }) ?? 0;
+
+            decimal materialCost = MaterialOptions?.Sum(m => m.Quantity * (m.Material?.PricePerUnit ?? 0)) ?? 0;
+
+            decimal cateringCost = CateringOptions?.Sum(c => c.TotalPrice) ?? 0;
+
+            return roomCost + materialCost + cateringCost;
+        }
     }
 }

@@ -12,10 +12,10 @@ namespace EVM.Infrastructure.Configurations
         {
             EnumToStringConverter<PaymentStatus> converter = new EnumToStringConverter<PaymentStatus>();
 
+            builder.HasKey(rr => rr.Id); 
 
-            builder.HasKey(rr => rr.Id); // Explicit primary key for the junction table
-
-            builder.Property(rr => rr.PaymentStatus).HasConversion(converter); // Store PaymentStatus as string in the database
+            builder.Property(rr => rr.PaymentStatus).HasDefaultValue(PaymentStatus.Pending);
+            builder.Property(rr => rr.PaymentStatus).HasConversion(converter);
 
             builder.HasOne(rr => rr.Event)
                    .WithMany(e => e.RoomReservations)
@@ -37,7 +37,7 @@ namespace EVM.Infrastructure.Configurations
             var event2Id = Guid.Parse("fedcba98-7654-3210-fedc-ba9876543210");
 
             builder.HasData(
-                new RoomReservation { Id = reservation1Id, EventId = event1Id, RoomId = 1 },
+                new RoomReservation { Id = reservation1Id, PaymentStatus = PaymentStatus.Completed, EventId = event1Id, RoomId = 1 },
                 new RoomReservation { Id = reservation2Id, EventId = event2Id, RoomId = 2 }
             );
         }

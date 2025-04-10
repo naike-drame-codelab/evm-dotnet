@@ -20,6 +20,7 @@ namespace EVM.Infrastructure.Configurations
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Name).HasMaxLength(200);
             builder.Property(e => e.Status).HasDefaultValue(EventStatus.Upcoming);
+            builder.ToTable(t=> t.HasCheckConstraint("CK_Event_Dates", "StartDate < EndDate"));
             builder.Property(e => e.Type).HasConversion(converter);
 
             builder.HasOne(e => e.Client)
@@ -59,7 +60,9 @@ namespace EVM.Infrastructure.Configurations
                     Name = "Annual Tech Conference",
                     Description = "The premier tech event of the year.",
                     StartDate = new DateTime(2025, 5, 15, 9, 0, 0),
-                    EndDate = new DateTime(2025, 5, 17, 17, 0, 0)
+                    EndDate = new DateTime(2025, 5, 17, 17, 0, 0),
+                    RoomReservations = new List<RoomReservation>()
+
                 },
                 new Event
                 {
@@ -69,7 +72,8 @@ namespace EVM.Infrastructure.Configurations
                     Type = EventType.Corporate,
                     Description = "Hands-on workshop for marketing professionals.",
                     StartDate = new DateTime(2025, 6, 10, 9, 30, 0),
-                    EndDate = new DateTime(2025, 6, 10, 16, 30, 0)
+                    EndDate = new DateTime(2025, 6, 10, 16, 30, 0),
+                    RoomReservations = new List<RoomReservation>()
                 }
             );
         }

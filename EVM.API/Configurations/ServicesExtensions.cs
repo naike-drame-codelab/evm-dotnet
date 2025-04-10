@@ -10,6 +10,8 @@ namespace EVM.API.Configurations
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();
         }
 

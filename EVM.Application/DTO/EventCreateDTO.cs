@@ -12,9 +12,10 @@ namespace EVM.Application.DTO
         [Required] public EventStatus Status { get; set; }
         [Required] public string Description { get; set; } = null!;
         public string? ImageUrl { get; set; }
-        public List<RoomReservationDTO>? RoomReservations { get; set; }
+        [Required] public List<RoomReservationDTO> RoomReservations { get; set; } = new();
         public List<MaterialOptionDTO>? MaterialOptions { get; set; }
         public List<CateringOptionDTO>? CateringOptions { get; set; }
+        [Required] public int ClientId { get; set; } // Changed to public set
     }
 
 

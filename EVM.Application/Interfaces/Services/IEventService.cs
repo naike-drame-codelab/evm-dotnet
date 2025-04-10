@@ -5,6 +5,7 @@ namespace EVM.Application.Interfaces.Services
 {
     public interface IEventService
     {
+        Task<decimal> CalculateEstimatedCostAsync(Guid eventId);
         Task<Event> CreateEvent(EventCreateDTO dto);
         Task<Event> DeleteEvent(Guid id);
         Task<Event> GetEventById(Guid id);

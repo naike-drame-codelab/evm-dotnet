@@ -145,6 +145,7 @@ namespace EVM.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
+                    table.CheckConstraint("CK_Event_Dates", "StartDate < EndDate");
                     table.ForeignKey(
                         name: "FK_Events_Clients_ClientId",
                         column: x => x.ClientId,
@@ -188,7 +189,6 @@ namespace EVM.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MaterialId = table.Column<int>(type: "int", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -214,7 +214,7 @@ namespace EVM.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Pending"),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -350,21 +350,22 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "MaterialOptions",
-                columns: new[] { "Id", "EventId", "MaterialId", "Quantity", "TotalPrice" },
+                columns: new[] { "Id", "EventId", "MaterialId", "Quantity" },
                 values: new object[,]
                 {
-                    { 1, new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, 2, 0m },
-                    { 2, new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 3, 1, 0m }
+                    { 1, new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, 2 },
+                    { 2, new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 3, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "RoomReservations",
                 columns: new[] { "Id", "EventId", "PaymentStatus", "RoomId" },
-                values: new object[,]
-                {
-                    { new Guid("01234567-89ab-cdef-0123-456789abcdef"), new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), "Pending", 1 },
-                    { new Guid("98765432-10fe-dcba-9876-543210fedcba"), new Guid("fedcba98-7654-3210-fedc-ba9876543210"), "Pending", 2 }
-                });
+                values: new object[] { new Guid("01234567-89ab-cdef-0123-456789abcdef"), new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), "Completed", 1 });
+
+            migrationBuilder.InsertData(
+                table: "RoomReservations",
+                columns: new[] { "Id", "EventId", "RoomId" },
+                values: new object[] { new Guid("98765432-10fe-dcba-9876-543210fedcba"), new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 2 });
 
             migrationBuilder.InsertData(
                 table: "Tickets",
