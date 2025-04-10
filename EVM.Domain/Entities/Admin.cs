@@ -7,7 +7,7 @@ using EVM.Domain.Enums;
 
 namespace EVM.Domain.Entities
 {
-    public class Admin
+    public class Admin : IUser
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

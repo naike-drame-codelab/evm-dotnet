@@ -19,9 +19,10 @@ namespace EVM.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Admin")
                 },
                 constraints: table =>
                 {
@@ -65,8 +66,8 @@ namespace EVM.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Role = table.Column<int>(type: "int", nullable: false, defaultValue: 2),
-                    Username = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Customer"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
@@ -103,6 +104,29 @@ namespace EVM.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rooms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventLogs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    EventType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Source = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DetailsJson = table.Column<string>(type: "TEXT", nullable: true),
+                    ClientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventLogs_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,8 +268,8 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Admins",
-                columns: new[] { "Id", "Password", "Username" },
-                values: new object[] { 1, "1234", "guildmaster" });
+                columns: new[] { "Id", "Email", "Name", "Password" },
+                values: new object[] { 1, "admin@evm.net", "guildmaster", "1234" });
 
             migrationBuilder.InsertData(
                 table: "Caterings",
@@ -269,11 +293,11 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Customers",
-                columns: new[] { "Id", "Email", "Role", "Username" },
+                columns: new[] { "Id", "Email", "Name", "Role" },
                 values: new object[,]
                 {
-                    { 1, "alice.smith@example.com", 2, "Alice Smith" },
-                    { 2, "bob.johnson@example.com", 2, "Bob Johnson" }
+                    { 1, "alice.smith@example.com", "Alice Smith", "Customer" },
+                    { 2, "bob.johnson@example.com", "Bob Johnson", "Customer" }
                 });
 
             migrationBuilder.InsertData(
@@ -303,8 +327,8 @@ namespace EVM.Infrastructure.Migrations
                 columns: new[] { "Id", "ClientId", "Description", "EndDate", "ImageUrl", "Name", "StartDate", "Type" },
                 values: new object[,]
                 {
-                    { new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, "The premier tech event of the year.", new DateTime(2025, 5, 17, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Annual Tech Conference", new DateTime(2025, 5, 15, 9, 0, 0, 0, DateTimeKind.Unspecified), "Concert" },
-                    { new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 2, "Hands-on workshop for marketing professionals.", new DateTime(2025, 6, 10, 16, 30, 0, 0, DateTimeKind.Unspecified), null, "Marketing Workshop", new DateTime(2025, 6, 10, 9, 30, 0, 0, DateTimeKind.Unspecified), "Concert" }
+                    { new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, "The premier tech event of the year.", new DateTime(2025, 5, 17, 17, 0, 0, 0, DateTimeKind.Unspecified), null, "Annual Tech Conference", new DateTime(2025, 5, 15, 9, 0, 0, 0, DateTimeKind.Unspecified), "Conference" },
+                    { new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 2, "Hands-on workshop for marketing professionals.", new DateTime(2025, 6, 10, 16, 30, 0, 0, DateTimeKind.Unspecified), null, "Marketing Workshop", new DateTime(2025, 6, 10, 9, 30, 0, 0, DateTimeKind.Unspecified), "Corporate" }
                 });
 
             migrationBuilder.InsertData(
@@ -355,6 +379,11 @@ namespace EVM.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventLogs_ClientId",
+                table: "EventLogs",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Events_ClientId",
                 table: "Events",
                 column: "ClientId");
@@ -401,6 +430,9 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CateringOptions");
+
+            migrationBuilder.DropTable(
+                name: "EventLogs");
 
             migrationBuilder.DropTable(
                 name: "MaterialOptions");

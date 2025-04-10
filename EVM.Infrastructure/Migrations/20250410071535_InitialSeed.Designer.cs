@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVM.Infrastructure.Migrations
 {
     [DbContext(typeof(EventVenueManagerContext))]
-    [Migration("20250409195626_InitialSeed")]
+    [Migration("20250410071535_InitialSeed")]
     partial class InitialSeed
     {
         /// <inheritdoc />
@@ -33,20 +33,25 @@ namespace EVM.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Role")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("Username")
+                    b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Admin");
 
                     b.HasKey("Id");
 
@@ -56,9 +61,10 @@ namespace EVM.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            Email = "admin@evm.net",
+                            Name = "guildmaster",
                             Password = "1234",
-                            Role = 0,
-                            Username = "guildmaster"
+                            Role = "Admin"
                         });
                 });
 
@@ -231,14 +237,15 @@ namespace EVM.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("Role")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(2);
-
-                    b.Property<string>("Username")
+                    b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Customer");
 
                     b.HasKey("Id");
 
@@ -249,15 +256,15 @@ namespace EVM.Infrastructure.Migrations
                         {
                             Id = 1,
                             Email = "alice.smith@example.com",
-                            Role = 2,
-                            Username = "Alice Smith"
+                            Name = "Alice Smith",
+                            Role = "Customer"
                         },
                         new
                         {
                             Id = 2,
                             Email = "bob.johnson@example.com",
-                            Role = 2,
-                            Username = "Bob Johnson"
+                            Name = "Bob Johnson",
+                            Role = "Customer"
                         });
                 });
 
@@ -307,7 +314,7 @@ namespace EVM.Infrastructure.Migrations
                             EndDate = new DateTime(2025, 5, 17, 17, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Annual Tech Conference",
                             StartDate = new DateTime(2025, 5, 15, 9, 0, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Concert"
+                            Type = "Conference"
                         },
                         new
                         {
@@ -317,8 +324,46 @@ namespace EVM.Infrastructure.Migrations
                             EndDate = new DateTime(2025, 6, 10, 16, 30, 0, 0, DateTimeKind.Unspecified),
                             Name = "Marketing Workshop",
                             StartDate = new DateTime(2025, 6, 10, 9, 30, 0, 0, DateTimeKind.Unspecified),
-                            Type = "Concert"
+                            Type = "Corporate"
                         });
+                });
+
+            modelBuilder.Entity("EVM.Domain.Entities.EventLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DetailsJson")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("EventLogs");
                 });
 
             modelBuilder.Entity("EVM.Domain.Entities.Material", b =>
@@ -628,6 +673,17 @@ namespace EVM.Infrastructure.Migrations
                         .WithMany("Events")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("EVM.Domain.Entities.EventLog", b =>
+                {
+                    b.HasOne("EVM.Domain.Entities.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EVM.Domain.Entities
 {
-    public class Client
+    public class Client : IUser
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
