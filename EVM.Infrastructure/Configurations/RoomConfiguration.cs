@@ -14,7 +14,8 @@ namespace EVM.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<Room> builder)
         {
             builder.HasKey(r => r.Id);
-            builder.Property(r => r.Name).IsRequired().HasMaxLength(100);
+            builder.Property(r => r.Name).HasMaxLength(100);
+            builder.Property(r => r.IsAvailable).HasDefaultValue(true);
             builder.Property(r => r.PricePerHour).HasColumnType("decimal(18, 2)");
 
             builder.HasMany(r => r.Reservations)

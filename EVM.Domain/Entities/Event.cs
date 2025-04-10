@@ -8,6 +8,7 @@ namespace EVM.Domain.Entities
         public string Name { get; set; } = null!;
         public string? ImageUrl { get; set; } = null!;
         public EventType Type { get; set; }
+        public EventStatus Status { get; set; }
         public string Description { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

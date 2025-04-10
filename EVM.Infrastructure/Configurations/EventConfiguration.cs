@@ -19,6 +19,7 @@ namespace EVM.Infrastructure.Configurations
 
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Name).HasMaxLength(200);
+            builder.Property(e => e.Status).HasDefaultValue(EventStatus.Upcoming);
             builder.Property(e => e.Type).HasConversion(converter);
 
             builder.HasOne(e => e.Client)

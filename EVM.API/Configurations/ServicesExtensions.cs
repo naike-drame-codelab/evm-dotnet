@@ -9,11 +9,13 @@ namespace EVM.API.Configurations
     {
         public static void AddRepositories(this IServiceCollection services)
         {
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();
         }
 
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddScoped<IEventService, EventService>();
             services.AddScoped<IEventLogService, EventLogService>();
         }
 

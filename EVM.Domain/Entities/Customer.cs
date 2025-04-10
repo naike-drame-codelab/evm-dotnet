@@ -11,9 +11,8 @@ namespace EVM.Domain.Entities
     public class Customer : IUser
     {
         public int Id { get; set; }
-        public Role Role { get; set; } = Role.Customer;
-        public string? Name { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public Role Role { get; set; } = Role.Customer;
 
         public ICollection<Ticket>? Tickets { get; set; }
         // public ICollection<Evaluation>? Evaluations { get; set; }

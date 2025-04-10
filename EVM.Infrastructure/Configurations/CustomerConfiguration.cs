@@ -18,7 +18,6 @@ namespace EVM.Infrastructure.Configurations
             EnumToStringConverter<Role> converter = new EnumToStringConverter<Role>();
 
             builder.HasKey(c => c.Id);
-            builder.Property(c => c.Name).HasMaxLength(100);
             builder.Property(c => c.Email).HasMaxLength(255);
             builder.Property(c => c.Role).HasConversion(converter);
             builder.Property(c => c.Role).HasDefaultValue(Role.Customer);
@@ -29,8 +28,8 @@ namespace EVM.Infrastructure.Configurations
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasData(
-                new Customer { Id = 1, Name = "Alice Smith", Email = "alice.smith@example.com" },
-                new Customer { Id = 2, Name = "Bob Johnson", Email = "bob.johnson@example.com" }
+                new Customer { Id = 1, Email = "alice.smith@example.com" },
+                new Customer { Id = 2, Email = "bob.johnson@example.com" }
             );
         }
     }

@@ -40,7 +40,7 @@ namespace EVM.Infrastructure.Repositories
             return Entities.FindAsync(ids);
         }
 
-        public virtual Task<TEntity?> FindOneWhereAync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<TEntity?> FindOneWhereAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Entities.FirstOrDefaultAsync(predicate);
         }

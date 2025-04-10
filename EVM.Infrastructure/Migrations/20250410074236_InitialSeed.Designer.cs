@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVM.Infrastructure.Migrations
 {
     [DbContext(typeof(EventVenueManagerContext))]
-    [Migration("20250410071535_InitialSeed")]
+    [Migration("20250410074236_InitialSeed")]
     partial class InitialSeed
     {
         /// <inheritdoc />
@@ -37,11 +37,6 @@ namespace EVM.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -53,6 +48,11 @@ namespace EVM.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Admin");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Admins");
@@ -62,9 +62,9 @@ namespace EVM.Infrastructure.Migrations
                         {
                             Id = 1,
                             Email = "admin@evm.net",
-                            Name = "guildmaster",
                             Password = "1234",
-                            Role = "Admin"
+                            Role = "Admin",
+                            Username = "guildmaster"
                         });
                 });
 
@@ -237,10 +237,6 @@ namespace EVM.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -256,14 +252,12 @@ namespace EVM.Infrastructure.Migrations
                         {
                             Id = 1,
                             Email = "alice.smith@example.com",
-                            Name = "Alice Smith",
                             Role = "Customer"
                         },
                         new
                         {
                             Id = 2,
                             Email = "bob.johnson@example.com",
-                            Name = "Bob Johnson",
                             Role = "Customer"
                         });
                 });
@@ -295,6 +289,11 @@ namespace EVM.Infrastructure.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -314,6 +313,7 @@ namespace EVM.Infrastructure.Migrations
                             EndDate = new DateTime(2025, 5, 17, 17, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Annual Tech Conference",
                             StartDate = new DateTime(2025, 5, 15, 9, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 0,
                             Type = "Conference"
                         },
                         new
@@ -324,6 +324,7 @@ namespace EVM.Infrastructure.Migrations
                             EndDate = new DateTime(2025, 6, 10, 16, 30, 0, 0, DateTimeKind.Unspecified),
                             Name = "Marketing Workshop",
                             StartDate = new DateTime(2025, 6, 10, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            Status = 0,
                             Type = "Corporate"
                         });
                 });
@@ -471,7 +472,9 @@ namespace EVM.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()

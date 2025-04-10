@@ -10,7 +10,6 @@ namespace EVM.Domain.Entities
     public interface IUser
     {
         int Id { get; set; }
-        string Name { get; set; }
         string Email { get; set; }
         Role Role { get; set; }
 

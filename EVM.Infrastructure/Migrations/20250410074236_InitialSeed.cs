@@ -19,7 +19,7 @@ namespace EVM.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Admin")
@@ -66,9 +66,8 @@ namespace EVM.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Customer"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Customer")
                 },
                 constraints: table =>
                 {
@@ -99,7 +98,7 @@ namespace EVM.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     PricePerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -137,6 +136,7 @@ namespace EVM.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -268,8 +268,8 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Admins",
-                columns: new[] { "Id", "Email", "Name", "Password" },
-                values: new object[] { 1, "admin@evm.net", "guildmaster", "1234" });
+                columns: new[] { "Id", "Email", "Password", "Username" },
+                values: new object[] { 1, "admin@evm.net", "1234", "guildmaster" });
 
             migrationBuilder.InsertData(
                 table: "Caterings",
@@ -293,11 +293,11 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Customers",
-                columns: new[] { "Id", "Email", "Name", "Role" },
+                columns: new[] { "Id", "Email", "Role" },
                 values: new object[,]
                 {
-                    { 1, "alice.smith@example.com", "Alice Smith", "Customer" },
-                    { 2, "bob.johnson@example.com", "Bob Johnson", "Customer" }
+                    { 1, "alice.smith@example.com", "Customer" },
+                    { 2, "bob.johnson@example.com", "Customer" }
                 });
 
             migrationBuilder.InsertData(
@@ -317,10 +317,18 @@ namespace EVM.Infrastructure.Migrations
                 {
                     { 1, 200, "Our largest and most elegant space, perfect for weddings, galas, and large conferences. Features high ceilings, a stage, and ample dance floor.", true, "Grand Ballroom", 150.00m },
                     { 2, 50, "A well-equipped conference room ideal for meetings, workshops, and presentations. Includes built-in AV equipment and comfortable seating.", true, "Conference Room A", 75.00m },
-                    { 3, 20, "A smaller, more intimate meeting room suitable for team discussions, interviews, and small group sessions. Offers a quiet and focused environment.", true, "Meeting Room 1", 40.00m },
-                    { 4, 30, "A premium suite offering a sophisticated setting for high-level meetings and VIP events. Includes a private lounge area and dedicated amenities.", false, "Executive Suite", 120.00m },
-                    { 5, 60, "A flexible training room that can be configured in various layouts. Equipped with whiteboards and projector screens, perfect for workshops and training sessions.", true, "Training Room B", 85.00m }
+                    { 3, 20, "A smaller, more intimate meeting room suitable for team discussions, interviews, and small group sessions. Offers a quiet and focused environment.", true, "Meeting Room 1", 40.00m }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "Id", "Capacity", "Description", "Name", "PricePerHour" },
+                values: new object[] { 4, 30, "A premium suite offering a sophisticated setting for high-level meetings and VIP events. Includes a private lounge area and dedicated amenities.", "Executive Suite", 120.00m });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "Id", "Capacity", "Description", "IsAvailable", "Name", "PricePerHour" },
+                values: new object[] { 5, 60, "A flexible training room that can be configured in various layouts. Equipped with whiteboards and projector screens, perfect for workshops and training sessions.", true, "Training Room B", 85.00m });
 
             migrationBuilder.InsertData(
                 table: "Events",

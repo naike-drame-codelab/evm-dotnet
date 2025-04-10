@@ -15,7 +15,7 @@ namespace EVM.Application.Interfaces.Repositories
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
         Task<List<TEntity>> FindAsync();
         ValueTask<TEntity?> FindOneAsync(params object[] ids);
-        Task<TEntity?> FindOneWhereAync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> FindOneWhereAsync(Expression<Func<TEntity, bool>> predicate);
         Task<List<TEntity>> FindWhereAsync(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> RemoveAsync(TEntity entity);
         Task<TEntity> UpdateAsync(TEntity entity);
