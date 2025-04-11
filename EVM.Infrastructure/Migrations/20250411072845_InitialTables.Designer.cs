@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVM.Infrastructure.Migrations
 {
     [DbContext(typeof(EventVenueManagerContext))]
-    [Migration("20250410204656_InitialSeed")]
-    partial class InitialSeed
+    [Migration("20250411072845_InitialTables")]
+    partial class InitialTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,11 +111,9 @@ namespace EVM.Infrastructure.Migrations
 
             modelBuilder.Entity("EVM.Domain.Entities.CateringOption", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CateringId")
                         .HasColumnType("int");
@@ -125,9 +123,6 @@ namespace EVM.Infrastructure.Migrations
 
                     b.Property<int>("NumberOfPeople")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -141,19 +136,17 @@ namespace EVM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("6cf60c32-0902-4fac-b20b-a34a0c178583"),
                             CateringId = 2,
                             EventId = new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"),
-                            NumberOfPeople = 150,
-                            TotalPrice = 0m
+                            NumberOfPeople = 150
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("044faf38-8339-4e06-b190-d1410cbbcc9d"),
                             CateringId = 3,
                             EventId = new Guid("fedcba98-7654-3210-fedc-ba9876543210"),
-                            NumberOfPeople = 40,
-                            TotalPrice = 0m
+                            NumberOfPeople = 40
                         });
                 });
 
@@ -413,11 +406,9 @@ namespace EVM.Infrastructure.Migrations
 
             modelBuilder.Entity("EVM.Domain.Entities.MaterialOption", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
@@ -440,14 +431,14 @@ namespace EVM.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("12345678-90ab-cdef-1234-567890abcdef"),
                             EventId = new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"),
                             MaterialId = 1,
                             Quantity = 2
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("abcdef12-3456-7890-abcd-ef1234567890"),
                             EventId = new Guid("fedcba98-7654-3210-fedc-ba9876543210"),
                             MaterialId = 3,
                             Quantity = 1

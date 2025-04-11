@@ -36,7 +36,6 @@ namespace EVM.Application.Services
             return await eventRepository.FindWhereAsync(e => e.RoomReservations != null && e.RoomReservations.Any());
         }
 
-
         public async Task<Event> GetEventById(Guid id)
         {
             return await eventRepository.FindOneAsync(id) ?? throw new KeyNotFoundException($"Event with id {id} not found.");
@@ -51,32 +50,7 @@ namespace EVM.Application.Services
                 throw new KeyNotFoundException($"Event with id {eventId} not found.");
             }
 
-            return new EventDetailsDTO
-            {
-                Id = e.Id,
-                Name = e.Name,
-                StartDate = e.StartDate,
-                EndDate = e.EndDate,
-                Type = e.Type,
-                Status = e.Status,
-                Description = e.Description,
-                ImageUrl = e.ImageUrl ?? "",
-                RoomReservations = e.RoomReservations?.Select(rr => new RoomReservationDTO
-                {
-                    Id = rr.Id,
-                    PaymentStatus = rr.PaymentStatus,
-                }).ToList() ?? new List<RoomReservationDTO>(),
-                MaterialOptions = e.MaterialOptions?.Select(mo => new MaterialOptionDTO
-                {
-                    Id = mo.Id,
-                    Quantity = mo.Quantity
-                }).ToList() ?? new List<MaterialOptionDTO>(),
-                CateringOptions = e.CateringOptions?.Select(co => new CateringOptionDTO
-                {
-                    Id = co.Id,
-                    NumberOfPeople = co.NumberOfPeople
-                }).ToList() ?? new List<CateringOptionDTO>()
-            };
+            return new EventDetailsDTO(e);
         }
 
         public async Task<Event> CreateEvent(EventCreateDTO dto)
@@ -100,21 +74,14 @@ namespace EVM.Application.Services
 
             Guid eventId = Guid.NewGuid();
 
-            List<RoomReservation> roomReservations = new();
-            foreach (RoomReservationDTO roomReservationDto in dto.RoomReservations)
+            foreach (int roomId in dto.RoomReservations)
             {
-                bool isRoomAvailable = await roomRepository.IsRoomAvailable(roomReservationDto.RoomId, dto.StartDate, dto.EndDate);
+                bool isRoomAvailable = await roomRepository.IsRoomAvailable(roomId, dto.StartDate, dto.EndDate);
                 if (!isRoomAvailable)
                 {
-                    throw new InvalidOperationException($"Room {roomReservationDto.RoomId} is not available for the selected dates.");
+                    throw new InvalidOperationException($"Room {roomId} is not available for the selected dates.");
                 }
 
-                roomReservations.Add(new RoomReservation
-                {
-                    Id = Guid.NewGuid(),
-                    RoomId = roomReservationDto.RoomId,
-                    EventId = eventId
-                });
             }
 
             Event e = await eventRepository.AddAsync(new Event
@@ -128,27 +95,23 @@ namespace EVM.Application.Services
                 Description = dto.Description,
                 ImageUrl = dto.ImageUrl,
                 ClientId = dto.ClientId,
-                RoomReservations = dto.RoomReservations.Select(rr => new RoomReservation
+                RoomReservations = dto.RoomReservations.Select(rId => new RoomReservation
                 {
-                    RoomId = rr.RoomId, 
-                    EventId = Guid.NewGuid()
+                    RoomId = rId
                 }).ToList(),
                 MaterialOptions = dto.MaterialOptions?.Select(mo => new MaterialOption
                 {
                     Id = Guid.NewGuid(),
                     MaterialId = mo.MaterialId,
                     Quantity = mo.Quantity,
-                    EventId = eventId
                 }).ToList(),
                 CateringOptions = dto.CateringOptions?.Select(co => new CateringOption
                 {
+                    Id = Guid.NewGuid(),
                     CateringId = co.CateringId, 
                     NumberOfPeople = co.NumberOfPeople,
-                    EventId = eventId
                 }).ToList()
             });
-
-            await eventRepository.AddAsync(e);
             
             scope.Complete();
             
@@ -176,7 +139,6 @@ namespace EVM.Application.Services
 
             return await eventRepository.UpdateAsync(existingEvent);
         }
-
 
         public async Task<Event> DeleteEvent(Guid id)
         {
@@ -211,7 +173,6 @@ namespace EVM.Application.Services
             }
         }
 
-
         public async Task<decimal> CalculateEstimatedCostAsync(Guid eventId)
         {
             // Fetch the event with all necessary details
@@ -233,7 +194,7 @@ namespace EVM.Application.Services
             decimal materialCost = e.MaterialOptions?.Sum(m =>
                 m.Quantity * (m.Material?.PricePerUnit ?? 0)) ?? 0;
 
-            decimal cateringCost = e.CateringOptions?.Sum(c => c.TotalPrice) ?? 0;
+            decimal cateringCost = e.CateringOptions?.Sum(c => c.NumberOfPeople * (c.Catering?.PricePerPerson ?? 0)) ?? 0;
 
             return roomCost + materialCost + cateringCost;
         }

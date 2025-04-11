@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using EVM.Domain.Entities;
@@ -19,9 +20,9 @@ namespace EVM.Application.DTO
         public string Description { get; set; } = e.Description;
         public DateTime StartDate { get; set; } = e.StartDate;
         public DateTime EndDate { get; set; } = e.EndDate;
-        public ICollection<RoomReservation>? RoomReservations { get; set; } = e.RoomReservations;
-        public ICollection<MaterialOption>? MaterialOptions { get; set; } = e.MaterialOptions;
-        public ICollection<CateringOption>? CateringOptions { get; set; } = e.CateringOptions;
+        public ICollection<RoomReservationDTO> RoomReservations { get; set; } = e.RoomReservations.Select(rr => new RoomReservationDTO(rr)).ToList();
+        public ICollection<MaterialOptionDTO>? MaterialOptions { get; set; } = e.MaterialOptions?.Select(mo => new MaterialOptionDTO(mo)).ToList();
+        public ICollection<CateringOptionDTO>? CateringOptions { get; set; } = e.CateringOptions?.Select(co => new CateringOptionDTO(co)).ToList();
         public ICollection<Ticket>? Tickets { get; set; } = e.Tickets;
     }
 }

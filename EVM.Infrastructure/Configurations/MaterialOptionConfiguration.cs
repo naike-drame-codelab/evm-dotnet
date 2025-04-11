@@ -31,10 +31,12 @@ namespace EVM.Infrastructure.Configurations
 
             var event1Id = Guid.Parse("a1b2c3d4-e5f6-7890-1234-567890abcdef");
             var event2Id = Guid.Parse("fedcba98-7654-3210-fedc-ba9876543210");
+            var mo1Id = Guid.Parse("12345678-90ab-cdef-1234-567890abcdef");
+            var mo2Id = Guid.Parse("abcdef12-3456-7890-abcd-ef1234567890");
 
             builder.HasData(
-                new MaterialOption { Id = 1, EventId = event1Id, MaterialId = 1, Quantity = 2 },
-                new MaterialOption { Id = 2, EventId = event2Id, MaterialId = 3, Quantity = 1 } 
+                new MaterialOption { Id = mo1Id, EventId = event1Id, MaterialId = 1, Quantity = 2 },
+                new MaterialOption { Id = mo2Id, EventId = event2Id, MaterialId = 3, Quantity = 1 } 
             );
         }
     }

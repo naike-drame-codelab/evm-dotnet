@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EVM.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSeed : Migration
+    public partial class InitialTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -158,10 +158,8 @@ namespace EVM.Infrastructure.Migrations
                 name: "CateringOptions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CateringId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -186,8 +184,7 @@ namespace EVM.Infrastructure.Migrations
                 name: "MaterialOptions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     MaterialId = table.Column<int>(type: "int", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -341,11 +338,11 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "CateringOptions",
-                columns: new[] { "Id", "CateringId", "EventId", "NumberOfPeople", "TotalPrice" },
+                columns: new[] { "Id", "CateringId", "EventId", "NumberOfPeople" },
                 values: new object[,]
                 {
-                    { 1, 2, new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 150, 0m },
-                    { 2, 3, new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 40, 0m }
+                    { new Guid("044faf38-8339-4e06-b190-d1410cbbcc9d"), 3, new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 40 },
+                    { new Guid("6cf60c32-0902-4fac-b20b-a34a0c178583"), 2, new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 150 }
                 });
 
             migrationBuilder.InsertData(
@@ -353,8 +350,8 @@ namespace EVM.Infrastructure.Migrations
                 columns: new[] { "Id", "EventId", "MaterialId", "Quantity" },
                 values: new object[,]
                 {
-                    { 1, new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, 2 },
-                    { 2, new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 3, 1 }
+                    { new Guid("12345678-90ab-cdef-1234-567890abcdef"), new Guid("a1b2c3d4-e5f6-7890-1234-567890abcdef"), 1, 2 },
+                    { new Guid("abcdef12-3456-7890-abcd-ef1234567890"), new Guid("fedcba98-7654-3210-fedc-ba9876543210"), 3, 1 }
                 });
 
             migrationBuilder.InsertData(
