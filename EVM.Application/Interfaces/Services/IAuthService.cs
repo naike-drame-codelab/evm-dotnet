@@ -9,6 +9,7 @@ namespace EVM.Application.Interfaces.Services
 {
     public interface IAuthService
     {
-        Task<LoginFormResultDTO> LoginAsync(string email, string password);
+        public Task<LoginFormResultDTO> LoginAsync(LoginFormDTO dto);
+        
     }
 }

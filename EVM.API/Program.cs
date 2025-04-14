@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -30,6 +29,7 @@ builder.Services.AddRepositories();
 builder.Services.AddServices();
 
 // AddEmailService
+
 // AddCors
 builder.Services.AddCors(b => b.AddDefaultPolicy(o =>
 {

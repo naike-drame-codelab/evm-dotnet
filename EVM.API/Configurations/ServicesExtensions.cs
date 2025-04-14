@@ -12,11 +12,13 @@ namespace EVM.API.Configurations
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();
         }
 
         public static void AddServices(this IServiceCollection services)
         {
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IEventLogService, EventLogService>();
         }

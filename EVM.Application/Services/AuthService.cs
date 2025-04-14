@@ -1,10 +1,11 @@
 ﻿using EVM.Application.DTO;
 using EVM.Application.Interfaces.Repositories;
+using EVM.Application.Interfaces.Services;
 using EVM.Domain.Entities;
 
 namespace EVM.Application.Services
 {
-    public class AuthService(IClientRepository clientRepository, IAdminRepository adminRepository)
+    public class AuthService(IClientRepository clientRepository, IAdminRepository adminRepository) : IAuthService
     {
         public async Task<LoginFormResultDTO> LoginAsync(LoginFormDTO dto)
         {
