@@ -9,18 +9,18 @@ using EVM.Domain.Enums;
 
 namespace EVM.Application.Services
 {
-    public class EventService : IEventService
+    public class EventService(IEventRepository eventRepository, IRoomRepository roomRepository, IClientRepository clientRepository) : IEventService
     {
-        private readonly IEventRepository eventRepository;
-        private readonly IRoomRepository roomRepository;
-        private readonly IClientRepository clientRepository;
-        public EventService(IEventRepository eventRepository, IRoomRepository roomRepository, IClientRepository clientRepository)
-        {
-            this.eventRepository = eventRepository;
-            this.roomRepository = roomRepository;
-            this.clientRepository = clientRepository;
-        }
-    
+        //private readonly IEventRepository eventRepository;
+        //private readonly IRoomRepository roomRepository;
+        //private readonly IClientRepository clientRepository;
+        //public EventService(IEventRepository eventRepository, IRoomRepository roomRepository, IClientRepository clientRepository)
+        //{
+        //    this.eventRepository = eventRepository;
+        //    this.roomRepository = roomRepository;
+        //    this.clientRepository = clientRepository;
+        //}
+
         public async Task<IEnumerable<Event>> GetEvents(bool includeDetails = false)
         {
             if (includeDetails)
@@ -108,13 +108,18 @@ namespace EVM.Application.Services
                 CateringOptions = dto.CateringOptions?.Select(co => new CateringOption
                 {
                     Id = Guid.NewGuid(),
-                    CateringId = co.CateringId, 
+                    CateringId = co.CateringId,
                     NumberOfPeople = co.NumberOfPeople,
                 }).ToList()
             });
-            
+
+            foreach (int roomId in dto.RoomReservations)
+            {
+                await roomRepository.UpdateRoomAvailability(roomId, dto.StartDate, dto.EndDate, false);
+            }
+
             scope.Complete();
-            
+
             return e;
         }
 
@@ -123,7 +128,11 @@ namespace EVM.Application.Services
             Event existingEvent = await eventRepository.FindEventWithDetailsByIdAsync(id)
                 ?? throw new KeyNotFoundException($"Event with id {id} not found.");
 
-            // Update event properties
+            foreach (var roomReservation in existingEvent.RoomReservations)
+            {
+                await roomRepository.UpdateRoomAvailability(roomReservation.RoomId, existingEvent.StartDate, existingEvent.EndDate, true);
+            }
+
             existingEvent.Name = updatedEvent.Name;
             existingEvent.StartDate = updatedEvent.StartDate;
             existingEvent.EndDate = updatedEvent.EndDate;
@@ -132,10 +141,13 @@ namespace EVM.Application.Services
             existingEvent.ImageUrl = updatedEvent.ImageUrl;
 
             existingEvent.RoomReservations = updatedEvent.RoomReservations;
-
             existingEvent.MaterialOptions = updatedEvent.MaterialOptions;
-
             existingEvent.CateringOptions = updatedEvent.CateringOptions;
+
+            foreach (var roomReservation in updatedEvent.RoomReservations)
+            {
+                await roomRepository.UpdateRoomAvailability(roomReservation.RoomId, updatedEvent.StartDate, updatedEvent.EndDate, false);
+            }
 
             return await eventRepository.UpdateAsync(existingEvent);
         }
@@ -144,6 +156,11 @@ namespace EVM.Application.Services
         {
             Event existingEvent = await eventRepository.FindEventWithDetailsByIdAsync(id)
                 ?? throw new KeyNotFoundException($"Event with id {id} not found.");
+
+            foreach (RoomReservation roomReservation in existingEvent.RoomReservations)
+            {
+                await roomRepository.UpdateRoomAvailability(roomReservation.RoomId, existingEvent.StartDate, existingEvent.EndDate, true);
+            }
 
             existingEvent.RoomReservations?.Clear();
             existingEvent.MaterialOptions?.Clear();
@@ -190,11 +207,15 @@ namespace EVM.Application.Services
                 double hours = (e.EndDate - e.StartDate).TotalHours;
                 return (decimal)hours * r.Room.PricePerHour;
             }) ?? 0;
+            Console.WriteLine(roomCost);
 
             decimal materialCost = e.MaterialOptions?.Sum(m =>
                 m.Quantity * (m.Material?.PricePerUnit ?? 0)) ?? 0;
 
+            Console.WriteLine(materialCost);
+
             decimal cateringCost = e.CateringOptions?.Sum(c => c.NumberOfPeople * (c.Catering?.PricePerPerson ?? 0)) ?? 0;
+            Console.WriteLine(cateringCost);
 
             return roomCost + materialCost + cateringCost;
         }
@@ -204,6 +225,6 @@ namespace EVM.Application.Services
             return roomRepository.IsRoomAvailable(roomId, startDate, endDate);
         }
 
-        
+
     }
 }

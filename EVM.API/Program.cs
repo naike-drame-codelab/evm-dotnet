@@ -23,6 +23,7 @@ builder.Services.AddDbContext<EventVenueManagerContext>(
 );
 
 // TokenManager
+
 // AddAuthentication
 
 builder.Services.AddRepositories();

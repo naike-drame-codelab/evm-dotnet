@@ -14,5 +14,28 @@ namespace EVM.Infrastructure.Repositories
                                  (endDate > rr.Event.StartDate && endDate <= rr.Event.EndDate) ||
                                  (startDate <= rr.Event.StartDate && endDate >= rr.Event.EndDate)));
         }
+
+        public async Task UpdateRoomAvailability(int roomId, DateTime startDate, DateTime endDate, bool isAvailable)
+        {
+            Room? room = await ctx.Rooms.Include(r => r.Reservations).FirstOrDefaultAsync(r => r.Id == roomId);
+            if (room != null)
+            {
+                if (isAvailable)
+                {
+                    bool hasActiveReservations = room.Reservations?.Any(rr =>
+                        rr.Event.StartDate < endDate
+                        && rr.Event.EndDate > startDate) ?? false;
+
+                    room.IsAvailable = !hasActiveReservations;
+                }
+                else
+                {
+                    room.IsAvailable = false;
+                }
+
+                await ctx.SaveChangesAsync();
+            }
+        }
+
     }
 }

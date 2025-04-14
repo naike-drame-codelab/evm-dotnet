@@ -21,8 +21,9 @@ namespace EVM.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Admin")
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Admin"),
+                    Salt = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,8 @@ namespace EVM.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Salt = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Client")
                 },
@@ -265,8 +267,8 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Admins",
-                columns: new[] { "Id", "Email", "Password", "Username" },
-                values: new object[] { 1, "admin@evm.net", "1234", "guildmaster" });
+                columns: new[] { "Id", "Email", "Password", "Salt", "Username" },
+                values: new object[] { 1, "admin@evm.net", "��!���0©����>�K	�Nb��Y�/��q��*�:v���Gc�����H�D���2$���/", new Guid("0c59677d-5989-43df-a9f8-5c04baf73c4b"), "guildmaster" });
 
             migrationBuilder.InsertData(
                 table: "Caterings",
@@ -280,12 +282,12 @@ namespace EVM.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Clients",
-                columns: new[] { "Id", "Email", "Name", "Password", "PhoneNumber", "Role" },
+                columns: new[] { "Id", "Email", "Name", "Password", "PhoneNumber", "Role", "Salt" },
                 values: new object[,]
                 {
-                    { 1, "info@eventpro.com", "EventPro Corp", "epropass", "123-456-7890", "Client" },
-                    { 2, "contact@globalgatherings.net", "Global Gatherings", "ggpass", "987-654-3210", "Client" },
-                    { 3, "alice.planner@events.net", "Event Planner Alice", "eventpass", "555-123-4567", "Client" }
+                    { 1, "info@eventpro.com", "EventPro Corp", "�9�0#�='�-�M�����`G�QZEφ�έG��m���%��k={�ή��\r횾y�0PNH�", "123-456-7890", "Client", new Guid("67f51696-864a-4b82-ba6e-8d2c434532a2") },
+                    { 2, "contact@globalgatherings.net", "Global Gatherings", "��$��\\t��)�B��7��i����~�$hsq�(EK�����(�pp�iS�T�\\sds��'�\rd�", "987-654-3210", "Client", new Guid("045bb8b9-60f9-4d06-8b12-e46a912883dd") },
+                    { 3, "alice.planner@events.net", "Event Planner Alice", "��〽��x5\\�x$�`�k���Uj�����M*�(t�\r�έ�m��0n����R{�KB�", "555-123-4567", "Client", new Guid("a7d1ec62-1acd-4f89-9e48-2de2975f77ee") }
                 });
 
             migrationBuilder.InsertData(

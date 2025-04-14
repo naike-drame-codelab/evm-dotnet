@@ -8,7 +8,7 @@ using EVM.Domain.Enums;
 
 namespace EVM.Domain.Entities
 {
-    public class Customer : IUser
+    public class Customer
     {
         public int Id { get; set; }
         public string Email { get; set; } = null!;

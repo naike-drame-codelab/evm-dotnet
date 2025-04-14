@@ -11,6 +11,8 @@ namespace EVM.Domain.Entities
     {
         int Id { get; set; }
         string Email { get; set; }
+        string Password { get; set; }
+        Guid Salt { get; set; }
         Role Role { get; set; }
 
     }

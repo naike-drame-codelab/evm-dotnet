@@ -36,14 +36,17 @@ namespace EVM.Infrastructure.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Admin");
+
+                    b.Property<Guid>("Salt")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -59,8 +62,9 @@ namespace EVM.Infrastructure.Migrations
                         {
                             Id = 1,
                             Email = "admin@evm.net",
-                            Password = "1234",
+                            Password = "��!���0©����>�K	�Nb��Y�/��q��*�:v���Gc�����H�D���2$���/",
                             Role = "Admin",
+                            Salt = new Guid("0c59677d-5989-43df-a9f8-5c04baf73c4b"),
                             Username = "guildmaster"
                         });
                 });
@@ -167,8 +171,8 @@ namespace EVM.Infrastructure.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(50)
@@ -180,6 +184,9 @@ namespace EVM.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Client");
 
+                    b.Property<Guid>("Salt")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
@@ -190,27 +197,30 @@ namespace EVM.Infrastructure.Migrations
                             Id = 1,
                             Email = "info@eventpro.com",
                             Name = "EventPro Corp",
-                            Password = "epropass",
+                            Password = "�9�0#�='�-�M�����`G�QZEφ�έG��m���%��k={�ή��\r횾y�0PNH�",
                             PhoneNumber = "123-456-7890",
-                            Role = "Client"
+                            Role = "Client",
+                            Salt = new Guid("67f51696-864a-4b82-ba6e-8d2c434532a2")
                         },
                         new
                         {
                             Id = 2,
                             Email = "contact@globalgatherings.net",
                             Name = "Global Gatherings",
-                            Password = "ggpass",
+                            Password = "��$��\\t��)�B��7��i����~�$hsq�(EK�����(�pp�iS�T�\\sds��'�\rd�",
                             PhoneNumber = "987-654-3210",
-                            Role = "Client"
+                            Role = "Client",
+                            Salt = new Guid("045bb8b9-60f9-4d06-8b12-e46a912883dd")
                         },
                         new
                         {
                             Id = 3,
                             Email = "alice.planner@events.net",
                             Name = "Event Planner Alice",
-                            Password = "eventpass",
+                            Password = "��〽��x5\\�x$�`�k���Uj�����M*�(t�\r�έ�m��0n����R{�KB�",
                             PhoneNumber = "555-123-4567",
-                            Role = "Client"
+                            Role = "Client",
+                            Salt = new Guid("a7d1ec62-1acd-4f89-9e48-2de2975f77ee")
                         });
                 });
 

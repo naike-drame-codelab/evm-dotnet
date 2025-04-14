@@ -24,19 +24,19 @@ namespace EVM.API.Controllers
             }
         }
 
-        //[HttpGet("{eventId}/estimated-cost")]
-        //public async Task<IActionResult> GetEstimatedCost(Guid eventId)
-        //{
-        //    try
-        //    {
-        //        decimal estimatedCost = await eventService.CalculateEstimatedCostAsync(eventId);
-        //        return Ok(new { EstimatedCost = estimatedCost });
-        //    }
-        //    catch (KeyNotFoundException ex)
-        //    {
-        //        return NotFound(new { Message = ex.Message });
-        //    }
-        //}
+        [HttpGet("{eventId}/estimated-cost")]
+        public async Task<IActionResult> GetEstimatedCost(Guid eventId)
+        {
+            try
+            {
+                decimal estimatedCost = await eventService.CalculateEstimatedCostAsync(eventId);
+                return Ok(new { EstimatedCost = estimatedCost });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
 
 
         [HttpPost]
@@ -68,6 +68,37 @@ namespace EVM.API.Controllers
             }
         }
 
-        
+        [HttpPut("{eventId}")]
+        public async Task<IActionResult> UpdateEvent(Guid eventId, [FromBody] Event updatedEvent)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                Event e = await eventService.UpdateEvent(eventId, updatedEvent);
+                return Ok(e);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> DeleteEvent(Guid eventId)
+        {
+            try
+            {
+                Event e = await eventService.DeleteEvent(eventId);
+                return Ok(e);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
     }
 }
