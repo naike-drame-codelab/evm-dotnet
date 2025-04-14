@@ -18,7 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<EventVenueManagerContext>(
-    o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    o => o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"))
 );
 
 // TokenManager

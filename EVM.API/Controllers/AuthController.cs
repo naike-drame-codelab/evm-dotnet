@@ -15,7 +15,7 @@ namespace EVM.API.Controllers
         {
             try
             {
-                LoginFormResultDTO? result = await authService.LoginAsync(loginForm.UsernameOrEmail, loginForm.Password);
+                LoginFormResultDTO? result = await authService.LoginAsync(loginForm);
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
