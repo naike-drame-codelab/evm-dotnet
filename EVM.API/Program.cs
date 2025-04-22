@@ -1,6 +1,7 @@
 using EVM.API.Configurations;
 using EVM.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EventVenueManagerContext>(
     o => o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"))
 );
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
 // TokenManager
 
