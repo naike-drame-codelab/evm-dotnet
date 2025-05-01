@@ -1,6 +1,10 @@
-﻿using EVM.Application.DTO;
+﻿
+using EVM.API.Configurations;
+using EVM.Application.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Stripe;
 using Stripe.Checkout;
 
 namespace EVM.API.Controllers
@@ -9,45 +13,55 @@ namespace EVM.API.Controllers
     [ApiController]
     public class CheckoutController : ControllerBase
     {
-        [HttpPost("Checkout")]
-        public ActionResult Checkout([FromBody] List<CheckoutItemDto> items)
+        private readonly StripeSettings _stripeSettings;
+
+        public CheckoutController(IOptions<StripeSettings> stripeSettings)
         {
-            if (items == null || !items.Any())
+            _stripeSettings = stripeSettings.Value; // Fix: Access the Value property of IOptions<T>
+        }
+
+        [HttpPost("create-checkout-session")]
+        public IActionResult CreateCheckoutSession([FromBody] CheckoutItemDto[] items)
+        {
+            StripeConfiguration.ApiKey = _stripeSettings.SecretKey; // Use the resolved _stripeSettings
+
+            if (items == null || items.Length == 0)
             {
                 return BadRequest("No items provided");
             }
 
             try
             {
+                var lineItems = items.Select(item => new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Price * 100), // Convert to cents
+                        Currency = "eur",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Name
+                        }
+                    },
+                    Quantity = item.Quantity
+                }).ToList();
+
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string> { "card" },
-                    LineItems = items.Select(item => new SessionLineItemOptions
-                    {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "usd",
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = item.Name
-                            },
-                            UnitAmount = (long)(item.Price * 100) // Convert to cents
-                        },
-                        Quantity = item.Quantity
-                    }).ToList(),
+                    LineItems = lineItems,
                     Mode = "payment",
-                    SuccessUrl = "http://{{ Your-domain }}/dashboard",
-                    CancelUrl = "http://{{ Your-domain }}/dashboard"
+                    SuccessUrl = "http://localhost:4200/success",
+                    CancelUrl = "http://localhost:4200/cancel"
                 };
 
-                SessionService? service = new SessionService();
-                Session? session = service.Create(options);
+                var service = new SessionService();
+                Session session = service.Create(options);
 
                 return Ok(new { sessionId = session.Id });
             }
             catch (Exception ex)
             {
-                // Log the error
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
