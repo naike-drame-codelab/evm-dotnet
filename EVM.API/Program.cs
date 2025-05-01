@@ -19,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<EventVenueManagerContext>(
-    o => o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"))
+    o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
