@@ -1,8 +1,10 @@
-﻿using EVM.Application.DTO;
+﻿using Elfie.Serialization;
+using EVM.Application.DTO;
 using EVM.Application.Interfaces.Services;
 using EVM.Application.Services;
 using EVM.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace EVM.API.Controllers
 {
@@ -99,6 +101,13 @@ namespace EVM.API.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
+
+        // TODO: Implement GET /api/rooms : Retourne la liste des rooms.
+
+	    // TODO: GET /api/materials : Retourne la liste des matériels.
+
+	    // TODO: GET /api/caterings : Retourne la liste des options de catering.
+
 
     }
 }
