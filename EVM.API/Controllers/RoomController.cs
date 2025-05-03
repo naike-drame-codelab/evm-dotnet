@@ -13,8 +13,7 @@ namespace EVM.API.Controllers
         {
             try
             {
-                // Simulate fetching room details
-                var roomDetails = new { RoomId = roomId, RoomName = "Conference Room A" };
+                var roomDetails = await roomService.GetRoomByIdAsync(roomId);
                 return Ok(roomDetails);
             }
             catch (KeyNotFoundException ex)
@@ -23,18 +22,12 @@ namespace EVM.API.Controllers
             }
         }
 
-        // get rooms list
         [HttpGet("list")]
         public async Task<IActionResult> GetRoomList()
         {
             try
             {
-                // Simulate fetching room list
-                var roomList = new List<object>
-                {
-                    new { RoomId = Guid.NewGuid(), RoomName = "Conference Room A" },
-                    new { RoomId = Guid.NewGuid(), RoomName = "Meeting Room B" }
-                };
+                var roomList = await roomService.GetAllRoomsAsync();
                 return Ok(roomList);
             }
             catch (Exception ex)
@@ -42,5 +35,20 @@ namespace EVM.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
             }
         }
+
+        // New endpoint to check room availability
+        [HttpGet("{roomId}/availability")]
+        public async Task<IActionResult> CheckRoomAvailability(int roomId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                bool isAvailable = await roomService.IsRoomAvailableAsync(roomId, startDate, endDate);
+                return Ok(new { RoomId = roomId, IsAvailable = isAvailable });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = ex.Message });
+            }
         }
+    }
 }

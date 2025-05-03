@@ -1,23 +1,21 @@
-﻿using EVM.Application.Interfaces.Services;
+﻿using EVM.Application.Interfaces.Repositories;
+using EVM.Application.Interfaces.Services;
 using EVM.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EVM.Application.Services
+public class RoomService(IRoomRepository roomRepository) : IRoomService
 {
-    public class RoomService : IRoomService
+    public async Task<IEnumerable<Room>> GetAllRoomsAsync()
     {
-        public Task<IEnumerable<Room>> GetAllRoomsAsync()
-        {
-            throw new NotImplementedException();
-        }
+        return await roomRepository.FindAsync();
+    }
 
-        public Task<Room> GetRoomByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task<Room> GetRoomByIdAsync(int id)
+    {
+        return await roomRepository.FindOneAsync(id) ?? throw new KeyNotFoundException($"Room with ID {id} not found.");
+    }
+
+    public async Task<bool> IsRoomAvailableAsync(int roomId, DateTime startDate, DateTime endDate)
+    {
+        return await roomRepository.IsRoomAvailable(roomId, startDate, endDate);
     }
 }

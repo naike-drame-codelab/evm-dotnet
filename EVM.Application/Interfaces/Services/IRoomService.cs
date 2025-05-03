@@ -13,6 +13,7 @@ namespace EVM.Application.Interfaces.Services
         // Define methods related to room management here
         Task<IEnumerable<Room>> GetAllRoomsAsync();
         Task<Room> GetRoomByIdAsync(int id);
-        
+        Task<bool> IsRoomAvailableAsync(int roomId, DateTime startDate, DateTime endDate);
+
     }
 }
