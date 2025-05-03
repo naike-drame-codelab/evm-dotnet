@@ -110,7 +110,19 @@ namespace EVM.Application.Services
                     Id = Guid.NewGuid(),
                     CateringId = co.CateringId,
                     NumberOfPeople = co.NumberOfPeople,
-                }).ToList()
+                }).ToList(),
+                Tickets = new List<Ticket>
+                {
+                    new Ticket
+                    {
+                        Id = Guid.NewGuid(),
+                        Type = TicketType.Regular, // change this to the appropriate type
+                        Price = dto.TicketPrice,
+                        QuantityAvailable = dto.TicketQuantity,
+                        QuantitySold = 0,
+                        PurchaseDate = DateTime.UtcNow
+                    }
+                }
             });
 
             foreach (int roomId in dto.RoomReservations)

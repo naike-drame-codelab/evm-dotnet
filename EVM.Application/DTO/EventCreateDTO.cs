@@ -16,6 +16,8 @@ namespace EVM.Application.DTO
         [Required] public List<int> RoomReservations { get; set; } = new();
         public List<MaterialOptionDTO>? MaterialOptions { get; set; }
         public List<CateringOptionDTO>? CateringOptions { get; set; }
+        public decimal TicketPrice { get; internal set; }
+        public int TicketQuantity { get; internal set; }
     }
 
 
