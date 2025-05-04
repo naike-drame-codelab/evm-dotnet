@@ -11,6 +11,8 @@ namespace EVM.API.Configurations
         {
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IMaterialRepository, MaterialRepository>();
+            services.AddScoped<ICateringRepository, CateringRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();

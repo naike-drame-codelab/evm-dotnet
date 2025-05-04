@@ -1,4 +1,5 @@
-﻿using EVM.Application.Interfaces.Services;
+﻿using EVM.Application.Interfaces.Repositories;
+using EVM.Application.Interfaces.Services;
 using EVM.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace EVM.Application.Services
 {
-    public class CateringService : ICateringService
+    public class CateringService(ICateringRepository cateringRepository) : ICateringService
     {
-        public Task<IEnumerable<Catering>> GetAllCateringsAsync()
+        public async Task<IEnumerable<Catering>> GetAllCateringsAsync()
         {
-            throw new NotImplementedException();
+            return await cateringRepository.FindAsync();
         }
 
         public Task<Catering> GetCateringByIdAsync(int id)
