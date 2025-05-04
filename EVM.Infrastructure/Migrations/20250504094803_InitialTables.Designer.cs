@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EVM.Infrastructure.Migrations
 {
     [DbContext(typeof(EventVenueManagerContext))]
-    [Migration("20250414100532_InitialTables")]
+    [Migration("20250504094803_InitialTables")]
     partial class InitialTables
     {
         /// <inheritdoc />

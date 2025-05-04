@@ -246,7 +246,7 @@ namespace EVM.Infrastructure.Migrations
                     PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     IsUsed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    CustomerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

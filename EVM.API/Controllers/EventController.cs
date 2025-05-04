@@ -12,6 +12,20 @@ namespace EVM.API.Controllers
     [ApiController]
     public class EventController(IEventService eventService) : ControllerBase
     {
+        [HttpGet] // Handles GET requests to /api/event
+        public async Task<IActionResult> GetEvents()
+        {
+            try { 
+
+            List<Event>? events = (List<Event>?)await eventService.GetEvents(); // Ensure the method returns a value, not void
+            return Ok(events);
+        }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
         [HttpGet("{eventId}")]
         public async Task<IActionResult> GetEventDetails(Guid eventId)
         {

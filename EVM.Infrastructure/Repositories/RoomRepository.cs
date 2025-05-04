@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EVM.Infrastructure.Repositories
 {
-    public class RoomRepository(EventVenueManagerContext ctx) : RepositoryBase<Event>(ctx), IRoomRepository
+    public class RoomRepository(EventVenueManagerContext ctx) : RepositoryBase<Room>(ctx), IRoomRepository
     {
         public async Task<bool> IsRoomAvailable(int roomId, DateTime startDate, DateTime endDate)
         {

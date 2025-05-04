@@ -9,7 +9,7 @@ namespace EVM.API.Controllers
     public class RoomController(IRoomService roomService) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetRoomDetails(Guid roomId)
+        public async Task<IActionResult> GetRoomDetails(int roomId)
         {
             try
             {
